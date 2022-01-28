@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  vault:
+    image: vault:1.9.2
+    environment:
+      - VAULT_DEV_ROOT_TOKEN_ID=myroot
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+     
+  airflow-standalone:
+    build: .
+    restart: always
+    ports:
+      - 7001:8080
+    volumes:
+      - ./dags:/root/airflow/dags
+      - ./config/airflow.cfg:/root/airflow/airflow.cfg
+    links:
+      - vault
+    depends_on:
+      - vault-init
+
+  vault-init:
+    image: vault:1.9.2
+    environment:
+      - VAULT_ADDR=http://vault:8200
+    entrypoint: /bin/sh
+    command:
+      - -c
+      - |
+        vault login "myroot"
+        vault kv put secret/connections/foo uri=http://www.ooo.com
+    depends_on:
+      - vault
