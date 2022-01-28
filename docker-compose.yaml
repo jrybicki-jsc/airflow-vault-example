@@ -22,15 +22,26 @@ services:
     depends_on:
       - vault-init
 
+  openssh-server:
+    image: ghcr.io/linuxserver/openssh-server
+    environment:
+      - TZ=Europe/London
+      - SUDO_ACCESS=false 
+      - PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC/XD+k1OVuHwq+a7f40y3kqnvJPYXGmVs8eLuxAQbzS0800tvWgNrUlqoog3Umr5TXz3lNNGvWdkHPqsq5uyyN1DkfcBw7lls1F+ITi0Zhuoc8CamLiRO6ZCnLl/QmQIcE24rYsAQ5XqmDWO6RKYjfhn8dKgGkIKqYM9NB1P1erQ=="
+      - USER_NAME=eflows
+
   vault-init:
     image: vault:1.9.2
     environment:
       - VAULT_ADDR=http://vault:8200
     entrypoint: /bin/sh
+    volumes:
+      - ./data.json:/data.json
     command:
       - -c
       - |
         vault login "myroot"
         vault kv put secret/connections/foo uri=http://www.ooo.com
+        vault kv put secret/connections/mycon @/data.json
     depends_on:
       - vault
