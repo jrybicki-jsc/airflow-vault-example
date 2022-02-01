@@ -29,6 +29,8 @@ services:
       - SUDO_ACCESS=false 
       - PUBLIC_KEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC/XD+k1OVuHwq+a7f40y3kqnvJPYXGmVs8eLuxAQbzS0800tvWgNrUlqoog3Umr5TXz3lNNGvWdkHPqsq5uyyN1DkfcBw7lls1F+ITi0Zhuoc8CamLiRO6ZCnLl/QmQIcE24rYsAQ5XqmDWO6RKYjfhn8dKgGkIKqYM9NB1P1erQ=="
       - USER_NAME=eflows
+    ports:
+      - 7077:2222
 
   vault-init:
     image: vault:1.9.2
