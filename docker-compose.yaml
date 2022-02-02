@@ -1,4 +1,7 @@
 version: '3'
+build:
+  context: .
+  network: host
 
 services:
   vault:
@@ -24,6 +27,7 @@ services:
 
   openssh-server:
     image: ghcr.io/linuxserver/openssh-server
+    container_name: openssh-server
     environment:
       - TZ=Europe/London
       - SUDO_ACCESS=false 
